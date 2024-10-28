@@ -7,10 +7,14 @@ oled_width = 128
 oled_height = 64
 oled = SSD1306_I2C(oled_width, oled_height, i2c)
 y = 0
-
+spam_list = []
+i = 0
 while True:
-    input1 = input("1:\n")
-    oled.fill(0)
-    oled.text(input1, 0, y, 1)
+    user_input = input(f"{i}:\n")
+    spam_list.append(user_input)
+    oled.text(spam_list[i], 0, y, 1)
     oled.show()
-    
+    y += 8
+    i += 1
+    if i == 7 and y == 64:
+        oled.scroll(0, -8)
