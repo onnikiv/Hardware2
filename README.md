@@ -2,7 +2,7 @@ Puita
 
 ```mermaid
 flowchart TB
-    A[Start] --> B{Decision}
-    B -->|Yes| C[Continue]
-    B -->|No| D[Stop]
+    A(school) --> B{yes or no}
+    B -->|Yes| C[sleep]
+    B -->|No| D[sleep more]
 ```
