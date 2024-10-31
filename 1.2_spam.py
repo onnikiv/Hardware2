@@ -9,6 +9,7 @@ oled = SSD1306_I2C(oled_width, oled_height, i2c)
 y = 0
 spam_list = []
 i = 0
+
 while True:
     user_input = input(f"{i}:\n")
     spam_list.append(user_input)
@@ -16,5 +17,10 @@ while True:
     oled.show()
     y += 8
     i += 1
-    if i == 7 and y == 64:
-        oled.scroll(0, -8)
+    print(i)
+    if i == 8:
+        oled.fill(0)
+        y == 0
+        n = i
+        oled.text(spam_list[(n-1)], 0, y, 1)
+        y += 8
