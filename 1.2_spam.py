@@ -13,7 +13,7 @@ i = 0
 while True:
     user_input = input(f"{i}:\n")
     spam_list.append(user_input)
-    if len(spam_list) > 8:      # if over 8 items, remove first -> (0)
+    if len(spam_list) > 8:      # if over 8 items, remove first item
         spam_list.pop(0)
     oled.fill(0)
     y = 0
