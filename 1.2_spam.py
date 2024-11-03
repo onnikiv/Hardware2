@@ -13,14 +13,12 @@ i = 0
 while True:
     user_input = input(f"{i}:\n")
     spam_list.append(user_input)
-    oled.text(spam_list[i], 0, y, 1)
-    oled.show()
-    y += 8
-    i += 1
-    print(i)
-    if i == 8:
-        oled.fill(0)
-        y == 0
-        n = i
-        oled.text(spam_list[(n-1)], 0, y, 1)
+    if len(spam_list) > 8:      # if over 8 items, remove first -> (0)
+        spam_list.pop(0)
+    oled.fill(0)
+    y = 0
+    for rivi in spam_list:
+        oled.text(rivi, 0, y, 1)
         y += 8
+    oled.show()
+    i += 1
