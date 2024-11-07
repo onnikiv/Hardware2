@@ -1,10 +1,10 @@
 import time
 from filefifo import Filefifo
 
-# Initialize Filefifo and define global flag
-data = Filefifo(10, name='capture_250Hz_01.txt')
+data = Filefifo(10, name='capture_250Hz_02.txt')
 read_data = []
 time_spent = []
+scaled_data = []
 On = True
 
 class Scale:
@@ -35,9 +35,6 @@ class Scale:
             self.state = self.read
     
     def scale(self):
-        print("aika mennyt")
-        # print(read_data)
-        
         old_min = min(read_data)
         old_max = max(read_data)
         new_min = 0
@@ -45,9 +42,27 @@ class Scale:
         
         for i in read_data:
             scaled = ((i - old_min)/(old_max - old_min)) * (new_max - new_min) + new_min
-            print(scaled)
+            scaled_data.append(scaled)
         
+        self.state = self.clear_time
+    
+            
+    def clear_time(self):
+        time_spent.clear()
+        self.state = self.printing
+        
+    def printing(self):
+        
+        for i in scaled_data:
+            time_spent.append(1)
+            print(i)
+            if len(time_spent) == self.plottime * 100:
+                self.state = self.dont_print
+        
+    def dont_print(self):
         On += False
+        
+             
 
 scaling = Scale(2,10)
 
