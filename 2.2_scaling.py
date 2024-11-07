@@ -1,7 +1,7 @@
 import time
 from filefifo import Filefifo
 
-data = Filefifo(10, name='capture_250Hz_01.txt')
+data = Filefifo(10, name='capture_250Hz_02.txt')
 read_data = []
 time_spent = []
 scaled_data = []
@@ -21,7 +21,6 @@ class Scale:
         data_from_data = data.get()
         read_data.append(data_from_data)
         time.sleep_ms(1)
-        
         self.state = self.dont_read
     
     def dont_read(self):
@@ -30,7 +29,6 @@ class Scale:
         
         if len(time_spent) == self.readtime * 100:
             self.state = self.scale
-        
         else:
             self.state = self.read
     
@@ -41,31 +39,27 @@ class Scale:
         new_max = 100
         
         for i in read_data:
-            scaled = ((i - old_min)/(old_max - old_min)) * (new_max - new_min) + new_min
+            scaled = ((i - old_min) / (old_max - old_min)) * (new_max - new_min) + new_min
             scaled_data.append(scaled)
         
         self.state = self.clear_time
-    
             
     def clear_time(self):
         time_spent.clear()
         self.state = self.printing
         
     def printing(self):
-        
         for i in scaled_data:
-            time_spent.append(1)
             print(i)
+            time_spent.append(1)
             if len(time_spent) == self.plottime * 100:
                 self.state = self.dont_print
-        
+                
     def dont_print(self):
         On = False
-        
-             
 
-scaling = Scale(2,10) #read for 2, plot for 10 seconds
+scaling = Scale(2, 10)
 
 while On:
     scaling.execute()
-    
+
