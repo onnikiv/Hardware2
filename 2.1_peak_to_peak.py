@@ -11,7 +11,7 @@ def peak_to_peak():
     peaks = []
     peak_times = []
     
-    for sample in range(2, 5000):
+    for sample in range(5000):
         next_value = data.get()
         
         if current_value > last_value and current_value > next_value: # Now > Then AND Now > Next => we up
@@ -28,9 +28,8 @@ def peak_to_peak():
         current_value = next_value
         
     # How many samples between samples:
-    
-    peak_intervals_in_samples =[]
-    peak_intervals_in_seconds =[]
+    peak_intervals_in_samples = []
+    peak_intervals_in_seconds = []
     
     for i in range(1, len(peaks)):
         between = peaks[i] - peaks[i - 1]
@@ -40,7 +39,7 @@ def peak_to_peak():
         times_between = peak_times[i] - peak_times[i - 1]
         peak_intervals_in_seconds.append(times_between)
         
-    avg_interval = sum(peak_intervals_in_samples) / len(peak_intervals_in_seconds)
+    avg_interval = sum(peak_intervals_in_seconds) / len(peak_intervals_in_seconds)
     frequency = 1 / avg_interval
 
     print(f"\nAMOUNT OF (SAMPLES) BETWEEN PEAKS: {peak_intervals_in_samples}")
