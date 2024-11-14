@@ -62,6 +62,7 @@ class LedScreen:
                 
             elif movement == 2:
                 self.state = self.led_toggle
+                rot.fifo.empty()
         
         for i, key in enumerate(sorted(self.leds.keys()), start=1):
             if i == self.current_row:
@@ -82,6 +83,7 @@ class LedScreen:
 
             else:
                 self.leds["LED1"] = "OFF"
+                
         elif self.current_led == 2:
             led2.toggle()
             if self.leds["LED2"] == "OFF":
