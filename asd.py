@@ -2,6 +2,7 @@ from machine import Pin
 from fifo import Fifo
 from machine import UART, Pin, I2C, Timer, ADC
 from ssd1306 import SSD1306_I2C
+from piotimer import Piotimer
 import time
 i2c = I2C(1, scl=Pin(15), sda=Pin(14), freq=400000)
 oled_width = 128
@@ -22,6 +23,7 @@ class Encoder:
         self.fifo = Fifo(30, typecode='i')
         self.a.irq(handler=self.handler, trigger=Pin.IRQ_RISING, hard=True)
         self.button.irq(handler = self.button_handler, trigger = Pin.IRQ_FALLING, hard = True)
+        # self.tmr = Piotimer(freq=10, callback=self.adc_callback)
 
     
     def handler(self, pin):
@@ -31,8 +33,11 @@ class Encoder:
             self.fifo.put(1)
 
     def button_handler(self,pin):
+        time.sleep(0.2)
         self.fifo.put(2)
+        time.sleep(0.2)
         print("2 value put into fifo")
+        
 
     
 
@@ -44,7 +49,6 @@ class LedScreen:
             "LED2":'OFF',
             "LED3":'OFF'}
         self.current_row = 1
-        self.current_led = 1
         self.state = self.cursor
     
     
@@ -62,7 +66,6 @@ class LedScreen:
                 
             elif movement == 2:
                 self.state = self.led_toggle
-                rot.fifo.empty()
         
         for i, key in enumerate(sorted(self.leds.keys()), start=1):
             if i == self.current_row:
@@ -74,36 +77,11 @@ class LedScreen:
 
             
     def led_toggle(self):
-        self.current_led = self.current_row
-        print(f"ledi: {self.current_led}")
-        if self.current_led == 1:
-            led1.toggle()
-            if self.leds["LED1"] == "OFF":
-                self.leds["LED1"] = "ON"
-
-            else:
-                self.leds["LED1"] = "OFF"
-                
-        elif self.current_led == 2:
-            led2.toggle()
-            if self.leds["LED2"] == "OFF":
-                self.leds["LED2"] = "ON"
-
-            else:
-                self.leds["LED2"] = "OFF"
-
-        elif self.current_led == 3:
-            led3.toggle()
-            if self.leds["LED3"] == "OFF":
-                self.leds["LED3"] = "ON"
-
-            else:
-                self.leds["LED3"] = "OFF"
-                
-        self.state = self.cursor
+        pass
 
 rot = Encoder(10, 11, 12)
 led_screen = LedScreen()
+rot.fifo.put(1)
 
 while True:
     if rot.fifo.has_data():
