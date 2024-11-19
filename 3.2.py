@@ -42,34 +42,34 @@ class LedMenu:
         self.current_row = 1
         self.state = self.cursor
 
+
     def button_handler(self, pin):
         self.fifo.put(2)
-        print("Button press detected, value 2 put into FIFO")
+
 
     def cursor(self):
         self.oled.fill(0)
+        movement = rot.fifo.get()
         
-        if rot.fifo.has_data():
-            movement = rot.fifo.get()
-            if movement == -1 and self.current_row < 2:
-                self.current_row += 1
-            elif movement == 1 and self.current_row > 0:
-                self.current_row -= 1
+        if movement == -1 and self.current_row < 2:
+            self.current_row += 1
+        elif movement == 1 and self.current_row > 0:
+            self.current_row -= 1
 
 
         for i, (led, status) in enumerate(self.leds.items()):
             led_name = f"LED{i + 1}"
             if i == self.current_row:
-
                 self.oled.text(f"{led_name}: {status} <", 0, 10 * (i + 1), 1)
             else:
                 self.oled.text(f"{led_name}: {status}", 0, 10 * (i + 1), 1)
 
         self.oled.show()
 
+
     def menu_update(self):
         self.oled.fill(0)
-        for i, (led, status) in enumerate(self.leds.items()):
+        for i, (led, status) in enumerate((self.leds.items())):
             led_name = f"LED{i + 1}"
             if i == self.current_row:
 
@@ -80,12 +80,12 @@ class LedMenu:
         self.oled.show()
         self.state = self.cursor
 
+
     def led_toggle(self):
 
             action = self.fifo.get()
             if action == 2:
                 selected_led = list(self.leds.keys())[self.current_row]
-                print(f"Toggling {selected_led}")
 
 
                 if selected_led == self.led1:
