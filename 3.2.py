@@ -2,6 +2,7 @@ from machine import Pin
 from fifo import Fifo
 from machine import I2C
 from ssd1306 import SSD1306_I2C
+import time
 
 class Encoder:
     def __init__(self, rot_a, rot_b):
@@ -27,6 +28,8 @@ class LedMenu:
         self.button.irq(handler=self.button_handler, trigger=Pin.IRQ_FALLING, hard=True)
         self.fifo = Fifo(10, typecode="i")
         
+        self.old_time = 0
+        
         self.led1 = Pin(22, Pin.OUT)
         self.led2 = Pin(21, Pin.OUT)
         self.led3 = Pin(20, Pin.OUT)
@@ -44,7 +47,12 @@ class LedMenu:
 
 
     def button_handler(self, pin):
+        delay = 50
+        current_time = time.ticks_ms()
+        if current_time - self.old_time < delay:
+            return
         self.fifo.put(2)
+        self.old_time = current_time
 
 
     def cursor(self):
