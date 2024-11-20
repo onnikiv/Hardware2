@@ -25,7 +25,7 @@ class DataScroller:
         self.min_value = min(self.sample_list)
         self.max_value = max(self.sample_list)
         self.scaled_samples = [
-            int((value - self.min_value) / (self.max_value - self.min_value) * 63)
+            int((value - self.min_value) / (self.max_value - self.min_value) * 63) # scaling the samples to fit in the screen
             for value in self.sample_list
         ]
 
@@ -38,9 +38,9 @@ class DataScroller:
     def update_display(self):
         self.oled.fill(0)
 
-        for i in range(self.window_size):
+        for i in range(self.window_size): #draw the wave 128pixels
             index = self.current_start + i
-            if index >= len(self.scaled_samples):
+            if index >= len(self.scaled_samples): # if max then stop drawing
                 break
 
             scaled_value = self.scaled_samples[index]
