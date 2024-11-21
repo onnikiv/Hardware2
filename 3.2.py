@@ -37,7 +37,7 @@ class LedMenu:
         self.state = self.cursor
 
     def button_handler(self, pin):
-        delay = 50
+        delay = 200
         current_time = time.ticks_ms()
         
         if time.ticks_diff(current_time, self.old_time) >= delay:
@@ -49,9 +49,8 @@ class LedMenu:
         self.oled.fill(0)
         for i, state in enumerate(self.led_states):
             led_name = f"LED{i + 1}"
-            suffix = " <" if i == self.current_row else ""
-            self.oled.text(f"{led_name}: {state}{suffix}", 0, 10 * (i + 1), 1)
-        self.oled.show()
+            pointer = " <" if i == self.current_row else ""
+            self.oled.text(f"{led_name}: {state}{pointer}", 0, 10 * (i + 1), 1)
 
     def cursor(self):
         if not rot.fifo.has_data():
@@ -75,8 +74,9 @@ rot = Encoder(10, 11)
 led_screen = LedMenu(12,22,21,20)
 
 while True:
-    if rot.fifo.has_data():
+    while rot.fifo.has_data():
         led_screen.state()
 
-    if led_screen.fifo.has_data():
+    while led_screen.fifo.has_data():
         led_screen.led_toggle()
+    led_screen.oled.show()

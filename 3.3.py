@@ -40,13 +40,13 @@ class DataScroller:
 
         for i in range(self.window_size): #draw the wave 128pixels
             index = self.current_start + i
-            if index >= len(self.scaled_samples): # if max then stop drawing
+            if index >= len(self.scaled_samples): # if max then stop drawing/going over
                 break
 
             scaled_value = self.scaled_samples[index]
             self.oled.pixel(i, 63 - scaled_value, 1)
 
-        self.oled.show()
+
 
     def scroll(self):
         movement = rot.fifo.get()
@@ -64,5 +64,6 @@ rot = Encoder(10,11)
 scroller = DataScroller(filename)
 
 while True:
-    if rot.fifo.has_data():
+    while rot.fifo.has_data():
         scroller.scroll()
+    scroller.oled.show()
